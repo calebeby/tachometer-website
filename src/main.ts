@@ -9,12 +9,16 @@ const main = () => {
   if (!app) return;
 
   app.innerHTML = `
-    <h1>You Are A Tachometer</h1>
+    <h1>Tachometer</h1>
+
+    <p>
+      For physics experiments, records the timing of when you press spacebar to track the frequency of a spinning object.
+    </p>
 
     <p>
       <ol>
         <li>Attach tape or another clear marking onto a part of the outside of the spinning object</li>
-        <li>Spin the object. You can make it accelerate or decelerate.</li>
+        <li>Spin the object. You can make it speed up or slow down.</li>
         <li>Press the spacebar every time the marking reaches a specific location in its rotation.</li>
         <li>The data recording begins when you press "Start" and ends when you press "Stop"</li>
         <li>Then you can copy-paste the data from the table into a spreadsheet or Desmos</li>
