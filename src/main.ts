@@ -19,7 +19,7 @@ const main = () => {
       <ol>
         <li>Attach tape or another clear marking onto a part of the outside of the spinning object</li>
         <li>Spin the object. You can make it speed up or slow down.</li>
-        <li>Press the spacebar every time the marking reaches a specific location in its rotation.</li>
+        <li>Press the spacebar (or the record button) every time the marking reaches a specific location in its rotation.</li>
         <li>The data recording begins when you press "Start" and ends when you press "Stop"</li>
         <li>Then you can copy-paste the data from the table into a spreadsheet or Desmos</li>
       </ol>
@@ -27,6 +27,8 @@ const main = () => {
 
     <button id="start">Start</button>
     <button id="stop">Stop</button>
+
+    <button id="record">Record Timestamp</button>
 
     <span id="timer"></span>
 
@@ -43,6 +45,7 @@ const main = () => {
 
   const startButton = document.querySelector<HTMLButtonElement>("#start")!;
   const stopButton = document.querySelector<HTMLButtonElement>("#stop")!;
+  const recordButton = document.querySelector<HTMLButtonElement>("#record")!;
   const timer = document.querySelector<HTMLSpanElement>("#timer")!;
   const table = document.querySelector<HTMLTableElement>("#data-table")!;
 
@@ -85,10 +88,7 @@ const main = () => {
     timer.hidden = true;
   });
 
-  window.addEventListener("keydown", (e) => {
-    if (!running) return;
-    if (e.key !== " ") return;
-
+  const handlePress = () => {
     table.hidden = false;
 
     const now = new Date().getTime();
@@ -106,6 +106,17 @@ const main = () => {
       <td>${data.length - 1}</td>
     `;
     table.querySelector("tbody")!.append(row);
+  };
+
+  window.addEventListener("keydown", (e) => {
+    if (!running) return;
+    if (e.key !== " ") return;
+
+    handlePress();
+  });
+
+  recordButton.addEventListener("click", () => {
+    handlePress();
   });
 };
 
