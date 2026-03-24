@@ -2,9 +2,6 @@ import "./style.css";
 
 const app = document.querySelector("#app");
 
-const round = (value: number, decimals: number) =>
-  Math.round(value * 10 ** decimals) / 10 ** decimals;
-
 const main = () => {
   if (!app) return;
 
@@ -19,14 +16,10 @@ const main = () => {
       <ol>
         <li>Attach tape or another clear marking onto a part of the outside of the spinning object</li>
         <li>Spin the object. You can make it speed up or slow down.</li>
-        <li>Press the spacebar (or the record button) every time the marking reaches a specific location in its rotation.</li>
-        <li>The data recording begins when you press "Start" and ends when you press "Stop"</li>
+        <li>Press the spacebar (or the "Record Timestamp" button) every time the marking reaches a specific location in its rotation.</li>
         <li>Then you can copy-paste the data from the table into a spreadsheet or Desmos</li>
       </ol>
     </p>
-
-    <button id="start">Start</button>
-    <button id="stop">Stop</button>
 
     <button id="record">Record Timestamp</button>
 
@@ -43,50 +36,16 @@ const main = () => {
     </table>
   `;
 
-  const startButton = document.querySelector<HTMLButtonElement>("#start")!;
-  const stopButton = document.querySelector<HTMLButtonElement>("#stop")!;
   const recordButton = document.querySelector<HTMLButtonElement>("#record")!;
   const timer = document.querySelector<HTMLSpanElement>("#timer")!;
   const table = document.querySelector<HTMLTableElement>("#data-table")!;
 
-  stopButton.hidden = true;
   timer.hidden = true;
   table.hidden = true;
 
-  let timerInterval: number | undefined = undefined;
   let startTime = 0;
-  let running = false;
 
   let data: number[] = [];
-
-  startButton.addEventListener("click", () => {
-    running = true;
-    startButton.hidden = true;
-    stopButton.hidden = false;
-    timer.hidden = false;
-    table.hidden = true;
-    startTime = new Date().getTime();
-
-    timerInterval = setInterval(() => {
-      const elapsed = (new Date().getTime() - startTime) / 1000;
-      timer.textContent = String(round(elapsed, 2));
-    }, 1);
-
-    table.querySelector("tbody")!.innerHTML = "";
-    data = [];
-  });
-
-  stopButton.addEventListener("click", () => {
-    if (!running) return;
-    if (timerInterval !== undefined) {
-      clearInterval(timerInterval);
-      timerInterval = undefined;
-    }
-    running = false;
-    stopButton.hidden = true;
-    startButton.hidden = false;
-    timer.hidden = true;
-  });
 
   const handlePress = () => {
     table.hidden = false;
@@ -102,14 +61,18 @@ const main = () => {
     data.push(elapsed);
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${elapsed}</td>
+      <td>${elapsed.toFixed(3)}</td>
       <td>${data.length - 1}</td>
     `;
     table.querySelector("tbody")!.append(row);
   };
 
   window.addEventListener("keydown", (e) => {
-    if (!running) return;
+    if (
+      document.activeElement != null &&
+      document.activeElement !== document.body
+    )
+      return;
     if (e.key !== " ") return;
 
     handlePress();
